@@ -1,0 +1,214 @@
+@import "tailwindcss";
+
+:root {
+  --background: #050b18;
+  --foreground: #e7eef6;
+  --surface: #0f2236;
+  --teal: #17544f;
+  --primary: #2440ff;
+  --primary-foreground: #ffffff;
+  --accent: #6fe3c1;
+  --muted: #93a7bc;
+  --line: rgb(231 238 246 / 0.1);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-teal: var(--teal);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+
+  --font-heading: var(--font-heading-face);
+  --font-body: var(--font-body-face);
+  --font-mono: var(--font-mono-face);
+}
+
+@property --holo-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--background);
+}
+
+body {
+  color: var(--foreground);
+  overflow-x: clip;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+  color: var(--foreground);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.glass {
+  background: linear-gradient(
+    150deg,
+    color-mix(in srgb, var(--surface) 72%, transparent),
+    color-mix(in srgb, var(--background) 60%, transparent)
+  );
+  border: 1px solid var(--line);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.text-glow {
+  text-shadow: 0 0 28px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.text-gradient {
+  background: linear-gradient(100deg, var(--foreground) 10%, var(--accent) 95%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.pattern-dots {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--foreground) 22%, transparent) 1px,
+    transparent 1.2px
+  );
+  background-size: 22px 22px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, #000 30%, transparent 100%);
+}
+
+.pattern-grid {
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 20%, transparent 100%);
+}
+
+.pattern-grid-floor {
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--primary) 55%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--primary) 55%, transparent) 1px, transparent 1px);
+  background-size: 64px 64px;
+  transform: perspective(520px) rotateX(62deg);
+  transform-origin: 50% 0%;
+  mask-image: linear-gradient(to bottom, transparent 0%, #000 35%, #000 60%, transparent 100%);
+  animation: grid-travel 4s linear infinite;
+}
+
+.holo-border {
+  position: relative;
+  isolation: isolate;
+}
+
+.holo-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--holo-angle),
+    transparent 0deg,
+    var(--primary) 70deg,
+    var(--accent) 120deg,
+    transparent 190deg,
+    transparent 360deg
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: holo-spin 6s linear infinite;
+}
+
+.orbit-spin {
+  animation: orbit-spin var(--orbit-duration, 24s) linear infinite;
+}
+
+.orbit-counter {
+  animation: orbit-counter var(--orbit-duration, 24s) linear infinite;
+}
+
+.core-pulse {
+  animation: core-pulse 5s ease-in-out infinite;
+}
+
+.typing-dot {
+  animation: typing 1s ease-in-out infinite;
+}
+
+@keyframes orbit-spin {
+  to {
+    transform: rotateZ(360deg);
+  }
+}
+
+@keyframes orbit-counter {
+  from {
+    transform: rotateZ(0deg) rotateX(calc(var(--orbit-tilt) * -1)) rotateZ(calc(var(--orbit-roll) * -1));
+  }
+  to {
+    transform: rotateZ(-360deg) rotateX(calc(var(--orbit-tilt) * -1)) rotateZ(calc(var(--orbit-roll) * -1));
+  }
+}
+
+@keyframes core-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.04);
+    filter: brightness(1.15);
+  }
+}
+
+@keyframes grid-travel {
+  to {
+    background-position: 0 64px;
+  }
+}
+
+@keyframes holo-spin {
+  to {
+    --holo-angle: 360deg;
+  }
+}
+
+@keyframes typing {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .orbit-spin,
+  .orbit-counter,
+  .core-pulse,
+  .typing-dot,
+  .pattern-grid-floor,
+  .holo-border::before {
+    animation: none;
+  }
+}
